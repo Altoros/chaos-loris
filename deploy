@@ -1,0 +1,28 @@
+
+
+CF_BASE_DOMAIN=example.com
+CF_API_URL=https://api.sys.$CF_BASE_DOMAIN
+CF_APPS_DOMAIN=apps.$CF_BASE_DOMAIN
+CF_ADMIN_USERNAME=admin
+CF_ADMIN_PASSWORD=pass
+
+cf api $CF_API_URL --skip-ssl-validation
+cf auth $CF_ADMIN_USERNAME $CF_ADMIN_PASSWORD
+cf t -o system -s chaos-army
+
+cf create-service p-mysql 100mb-dev chaos-loris
+cf push
+
+cf curl /v2/apps
+
+# WARNING: chaos-loris fails if it has less than 1G mem
+# take .metadata.guid and put it in the following format {"applicationId" : "ID"}
+
+curl -k "https://chaos-loris.$CF_APPS_DOMAIN/applications" -i -X POST -H 'Content-Type: application/json' -d '{"applicationId" : "14d868cc-3831-4646-96aa-77718c939abb"}'
+curl -k "https://chaos-loris.$CF_APPS_DOMAIN/applications" -i -H 'Accept: application/hal+json'
+
+# curl -k "https://chaos-loris.$CF_APPS_DOMAIN/applications" -i -X POST -H 'Content-Type: application/json' -d 'applicationId=14d868cc-3831-4646-96aa-77718c939abb'
+
+curl -k "https://chaos-loris.$CF_APPS_DOMAIN/applications" -i -X POST -H 'Accept: application/hal+json' -d '{
+  "applicationId" : "14d868cc-3831-4646-96aa-77718c939abb"
+}'
