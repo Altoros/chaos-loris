@@ -19,7 +19,7 @@ CREATE TABLE event (
   total_instance_count INTEGER  NOT NULL,
 
   PRIMARY KEY (id),
-  FOREIGN KEY (chaos_id) REFERENCES chaos (id)
+  -- FOREIGN KEY (chaos_id) REFERENCES chaos (id)
 );
 
 CREATE TABLE event_terminated_instances (
