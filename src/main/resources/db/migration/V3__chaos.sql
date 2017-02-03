@@ -20,6 +20,5 @@ CREATE TABLE chaos (
 
   PRIMARY KEY (id),
   FOREIGN KEY (schedule_id) REFERENCES schedule (id),
-  FOREIGN KEY (application_id) REFERENCES application (id),
   UNIQUE (application_id, schedule_id)
 );

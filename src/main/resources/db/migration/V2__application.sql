@@ -14,7 +14,7 @@
 
 CREATE TABLE application (
   id             INTEGER    NOT NULL AUTO_INCREMENT,
-  application_id BINARY(16) NOT NULL UNIQUE,
+  application_id BINARY(16) NOT NULL ,
 
   PRIMARY KEY (id)
 );
