@@ -74,8 +74,15 @@ final class StandardDestroyer implements Destroyer {
         return getInstanceCount(chaos, platform)
             .then(instanceCount -> Flux.range(0, instanceCount)
                 .flatMap(index -> Mono.just(fateEngine.getFate(chaos))
-                    .filter(fate -> THUMBS_DOWN == fate)
-                    .then(terminate(chaos.getApplication(), index, platform)))
+                    .filter((fate) -> {
+                        logger.info("thumb state for {} is {}", index, fate);
+                        logger.info("fate for {} is {}", index, THUMBS_DOWN == fate);
+                        return THUMBS_DOWN == fate;
+                    }).then((input) -> {
+                        logger.info("input {}", input);
+                        logger.info("terminating {}", index);
+                        return terminate(chaos.getApplication(), index, platform);
+                    }))
                 .collectList()
                 .map(terminatedInstances -> new Event(chaos, Instant.now(), terminatedInstances, instanceCount)))
             .then(event -> Mono.just(eventRepository.save(event)))
